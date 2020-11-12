@@ -9,7 +9,7 @@ import numpy as np
 
 def pgm_index(neuroni, seg_init, seg_end, slopes, intercepts, trainable):
     # layer input
-    data = Input(shape=(1,))
+    data = Input(shape=(1,), dtype=np.int64)
 
     # layer sinistro
     custom = myCustom(units=neuroni, init=seg_init, train=trainable, end=seg_end)
@@ -23,7 +23,7 @@ def pgm_index(neuroni, seg_init, seg_end, slopes, intercepts, trainable):
     mul = Multiply()([sinistro, destro])
 
     # output layer
-    dense2 = Dense(1, kernel_initializer='ones', use_bias=False, trainable=False)
+    dense2 = Dense(1, kernel_initializer='ones', use_bias=False, trainable=False, input_dtype=np.float64)
     out = dense2(mul)
     model = Model(inputs=data, outputs=out)
     return model

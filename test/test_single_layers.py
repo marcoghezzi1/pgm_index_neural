@@ -14,12 +14,12 @@ intercept = np.array([3, -4])
 
 class MyTestCaseCustomLayer(unittest.TestCase):
     def test_bin1_custom_layer(self):
-        data = Input(shape=(1,))
-        custom = myCustom(units=2, init=w, train=False, end=end)
+        data = Input(shape=(1,), dtype=np.int64)
+        custom = myCustom(units=2, init=w, train=False, end=end, dtype=np.float64)
         out = custom(data)
         model = Model(inputs=data, outputs=out)
         x = model.predict([10])
-        print(x.shape)
+        print(custom.dtype)
         y = np.array([[0, 1]])
         self.assertTrue((x == y).all())
 
