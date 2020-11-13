@@ -32,7 +32,6 @@ for i in range(len(dati)):
     err.append(diff)
 
 print(all(i <= 64.1 for i in err))
-#print(len(err))
 
 
 
