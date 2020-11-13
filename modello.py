@@ -16,7 +16,7 @@ def pgm_index(neuroni, seg_init, seg_end, slopes, intercepts, trainable):
     sinistro = custom(data)
 
     # layer destro
-    pgm = custom_pgm(neuroni, seg_init, slopes, intercepts, trainable)
+    pgm = custom_pgm(neuroni, seg_init, slopes, intercepts, True)
     destro = pgm(data)
 
     # mult layer
