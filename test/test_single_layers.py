@@ -14,7 +14,7 @@ intercept = np.array([3, -4])
 
 class MyTestCaseCustomLayer(unittest.TestCase):
     def test_bin1_custom_layer(self):
-        data = Input(shape=(1,), dtype=np.int64)
+        data = Input(shape=(1,), dtype=np.float64)
         custom = myCustom(units=2, init=w, train=False, end=end, dtype=np.float64)
         out = custom(data)
         model = Model(inputs=data, outputs=out)
@@ -24,7 +24,7 @@ class MyTestCaseCustomLayer(unittest.TestCase):
         self.assertTrue((x == y).all())
 
     def test_bin2_customlayer(self):
-        data = Input(shape=(1,), dtype=np.int64)
+        data = Input(shape=(1,), dtype=np.float64)
         custom = myCustom(units=2, init=w, train=False, end=end)
         out = custom(data)
         model = Model(inputs=data, outputs=out)
@@ -34,7 +34,7 @@ class MyTestCaseCustomLayer(unittest.TestCase):
 
     def test_pgm_layer(self):
         pgm = custom_pgm(2, w, slope, intercept, False)
-        data = Input(shape=(1,), dtype=np.int64)
+        data = Input(shape=(1,), dtype=np.float64)
         ris = pgm(data)
         model = Model(inputs=data, outputs=ris)
         x = model.predict([10])
