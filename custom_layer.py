@@ -4,6 +4,9 @@ from keras.initializers import Initializer
 import numpy as np
 from keras import backend as K
 import tensorflow as tf
+import os
+
+os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 
 
 class my_init(Initializer):
@@ -37,7 +40,7 @@ class myCustom(Layer):
     def call(self, inputs):
         a = K.greater_equal(inputs, self.init)
         b = K.greater(self.end, inputs)
-        out = tf.where(K.all(K.stack([a, b], axis=0), axis=0), K.ones(K.shape(inputs), dtype=np.float64), K.zeros(K.shape(inputs), dtype=np.float64),)
+        out = tf.where(K.all(K.stack([a, b], axis=0), axis=0), K.ones(K.shape(inputs), dtype=np.float64), K.zeros(K.shape(inputs), dtype=np.float64))
         return out
 
     def compute_output_shape(self, input_shape):
