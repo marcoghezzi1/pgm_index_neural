@@ -9,7 +9,7 @@ import numpy as np
 
 def pgm_index(neuroni, seg_init, seg_end, slopes, intercepts, trainable):
     # layer input
-    data = Input(shape=(1,), dtype=np.int64)
+    data = Input(shape=(1,), dtype=np.float64)
 
     # layer sinistro
     custom = myCustom(units=neuroni, init=seg_init, train=trainable, end=seg_end)

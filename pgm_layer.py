@@ -28,7 +28,7 @@ class custom_pgm(Layer):
     def build(self, input_shape):
         self.init = self.add_weight(name='kernel',
                                     shape=(input_shape[1], self.units),
-                                    initializer=my_init(self.initW), trainable=self.trainable, dtype=np.int64)
+                                    initializer=my_init(self.initW), trainable=self.trainable, dtype=np.float64)
         self.slope = self.add_weight(name='kernel',
                                      shape=(input_shape[1], self.units),
                                      initializer=my_init(self.slope), trainable=self.trainable, dtype=np.float64)

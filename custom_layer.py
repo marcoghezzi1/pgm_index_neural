@@ -31,10 +31,10 @@ class myCustom(Layer):
     def build(self, input_shape):
         self.init = self.add_weight(name='kernel',
                                     shape=(input_shape[1], self.units),
-                                    initializer=my_init(self.initW), trainable=self.trainable, dtype=np.int64)
+                                    initializer=my_init(self.initW), trainable=self.trainable, dtype=np.float64)
         self.end = self.add_weight(name='kernel',
                                    shape=(input_shape[1], self.units),
-                                   initializer=my_init(self.initB), trainable=self.trainable, dtype=np.int64)
+                                   initializer=my_init(self.initB), trainable=self.trainable, dtype=np.float64)
         super(myCustom, self).build(input_shape)  # Be sure to call this at the end
 
     def call(self, inputs):
