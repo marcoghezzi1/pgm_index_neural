@@ -13,8 +13,8 @@ dati = np.fromfile("../datipisa/wiki_ts_1M_uint64", dtype=np.uint64)
 
 dati = dati.reshape(len(dati), 1)
 init = indice['key']
-slope = tf.convert_to_tensor(indice['slope'])
-intercept = tf.convert_to_tensor(indice['intercept'])
+slope = indice['slope']
+intercept = indice['intercept']
 end = indice['key'][1:].to_numpy()
 end = np.append(end, sys.maxsize)
 neuroni = len(indice)
