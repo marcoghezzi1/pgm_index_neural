@@ -3,7 +3,6 @@ import unittest
 import pandas as pd
 import numpy as np
 import sys
-import tensorflow as tf
 from modello import pgm_index
 
 
@@ -15,7 +14,7 @@ dati = dati.reshape(len(dati), 1)
 init = indice['key']
 slope = indice['slope']
 intercept = indice['intercept']
-end = indice['key'][1:].to_numpy()
+end = indice['key'][1:]
 end = np.append(end, sys.maxsize)
 neuroni = len(indice)
 
@@ -24,6 +23,7 @@ class MyTestCase(unittest.TestCase):
     def test_something(self):
         pgm = pgm_index(neuroni, init, end, slope, intercept, False)
         y = pgm.predict(dati).reshape(-1, 1)
+        print(y.shape)
         index = [0]
         for i in range(1, len(dati)):
             if dati[i] == dati[i - 1]:

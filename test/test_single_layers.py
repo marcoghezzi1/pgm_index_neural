@@ -19,7 +19,7 @@ class MyTestCaseCustomLayer(unittest.TestCase):
         out = custom(data)
         model = Model(inputs=data, outputs=out)
         x = model.predict([10])
-        #print(custom.dtype)
+        print(custom.get_weights())
         y = np.array([[0, 1]])
         self.assertTrue((x == y).all())
 
@@ -33,12 +33,13 @@ class MyTestCaseCustomLayer(unittest.TestCase):
         self.assertTrue((x == y).all())
 
     def test_pgm_layer(self):
-        pgm = custom_pgm(2, w, slope, intercept, False)
+        pgm = custom_pgm(2, w, slope, intercept, True)
+        print(pgm.trainable)
         data = Input(shape=(1,), dtype=np.float64)
         ris = pgm(data)
         model = Model(inputs=data, outputs=ris)
         x = model.predict([10])
-        print(x)
+
         y = np.array([[48, 2]])
         self.assertTrue((x == y).all())
 
