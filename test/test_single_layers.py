@@ -5,11 +5,12 @@ from modello import pgm_index
 import numpy as np
 from keras.layers import Input
 from keras.models import Model
+import tensorflow as tf
 
 w = np.array([1, 8]).reshape(1, 2)
-end = np.array([8, 20])
+end = np.array([8, 20]).reshape(1, 2)
 slope = np.array([5, 3]).reshape(1, 2)
-intercept = np.array([3, -4])
+intercept = np.array([3, -4]).reshape(1, 2)
 
 
 class MyTestCaseCustomLayer(unittest.TestCase):
@@ -19,13 +20,12 @@ class MyTestCaseCustomLayer(unittest.TestCase):
         out = custom(data)
         model = Model(inputs=data, outputs=out)
         x = model.predict([10])
-        print(custom.get_weights())
         y = np.array([[0, 1]])
         self.assertTrue((x == y).all())
 
-    def test_bin2_customlayer(self):
+    def test_bin2_custom_layer(self):
         data = Input(shape=(1,), dtype=np.float64)
-        custom = myCustom(units=2, init=w, train=False, end=end)
+        custom = myCustom(units=2, init=w, train=False, end=end, dtype=np.float64)
         out = custom(data)
         model = Model(inputs=data, outputs=out)
         x = model.predict([7])
@@ -33,25 +33,24 @@ class MyTestCaseCustomLayer(unittest.TestCase):
         self.assertTrue((x == y).all())
 
     def test_pgm_layer(self):
-        pgm = custom_pgm(2, w, slope, intercept, True)
+        pgm = custom_pgm(2, w, slope, intercept, True, name='custom', dtype=np.float64)
         print(pgm.trainable)
         data = Input(shape=(1,), dtype=np.float64)
         ris = pgm(data)
         model = Model(inputs=data, outputs=ris)
-        x = model.predict([10])
-
+        print(model.summary())
+        x = model.predict(np.array([10], dtype=np.float64))
+        print(x)
         y = np.array([[48, 2]])
         self.assertTrue((x == y).all())
 
     def test_pgm(self):
         model = pgm_index(2, w, end, slope, intercept, False)
-        inputs = np.array([[10, 2]])
-        inputs = inputs.reshape(2, 1)
         #print(inputs)
-        x = model.predict(inputs)
-        #print(x)
+        x = model.predict([10])
+        print(x)
         y = np.array([[2]])
-        self.assertTrue((x == y).any)
+        self.assertTrue((x == y).all())
 
 
 if __name__ == '__main__':

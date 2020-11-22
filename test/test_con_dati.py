@@ -11,11 +11,11 @@ with open('../datipisa/segments_wiki_ts_1M_uint64.csv') as file:
 dati = np.fromfile("../datipisa/wiki_ts_1M_uint64", dtype=np.uint64)
 
 dati = dati.reshape(len(dati), 1)
-init = indice['key']
-slope = indice['slope']
-intercept = indice['intercept']
+init = indice['key'].to_numpy().reshape(1, len(indice))
+slope = indice['slope'].to_numpy().reshape(1, len(indice))
+intercept = indice['intercept'].to_numpy().reshape(1, len(indice))
 end = indice['key'][1:]
-end = np.append(end, sys.maxsize)
+end = np.append(end, sys.maxsize).reshape(1, len(indice))
 neuroni = len(indice)
 
 
@@ -35,7 +35,6 @@ class MyTestCase(unittest.TestCase):
         for i in range(len(dati)):
             diff = abs(y[i, 0] - index[i])
             err.append(diff)
-
         x = all(i <= 64.1 for i in err)
         self.assertEqual(True, x)
 

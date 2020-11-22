@@ -18,12 +18,11 @@ for i in range(1, len(x_train)):
     else:
         index.append(i)
 
-
-init = indice['key'].to_numpy()
-slope = indice['slope'].to_numpy()
-intercept = indice['intercept'].to_numpy()
+init = indice['key'].to_numpy().reshape(1, len(indice))
+slope = indice['slope'].to_numpy().reshape(1, len(indice))
+intercept = indice['intercept'].to_numpy().reshape(1, len(indice))
 end = indice['key'][1:]
-end = np.append(end, sys.maxsize)
+end = np.append(end, sys.maxsize).reshape(1, len(indice))
 neuroni = len(indice)
 pgm = pgm_index(neuroni, init, end, slope, intercept, True)
 
@@ -31,7 +30,9 @@ pgm = pgm_index(neuroni, init, end, slope, intercept, True)
 pgm.compile(loss='mean_absolute_error', optimizer='adam')
 
 
+print(x_train.shape)
 y_train = np.array(index).reshape(len(x_train), 1)
+print(y_train.shape)
 
 
 pgm.fit(x_train, y_train)

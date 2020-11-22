@@ -29,6 +29,7 @@ class myCustom(Layer):
         self.initB = end
 
     def build(self, input_shape):
+
         self.init = self.add_weight(name='kernel',
                                     shape=(input_shape[1], self.units),
                                     initializer=my_init(self.initW), trainable=self.trainable, dtype=np.float64)        # dtype=np.float64
@@ -40,9 +41,7 @@ class myCustom(Layer):
     def call(self, inputs):
         a = K.greater_equal(inputs, self.init)
         b = K.greater(self.end, inputs)
-        out = tf.where(K.all(K.stack([a, b], axis=0), axis=0),
-                       K.ones(K.shape(inputs), dtype=np.float64),
-                       K.zeros(K.shape(inputs), dtype=np.float64))               # dtype=np.float64
+        out = float(K.all(K.stack([a, b], axis=0), axis=0))              # dtype=np.float64
         return out
 
     def compute_output_shape(self, input_shape):
