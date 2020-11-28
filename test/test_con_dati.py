@@ -21,9 +21,8 @@ neuroni = len(indice)
 
 class MyTestCase(unittest.TestCase):
     def test_something(self):
-        pgm = pgm_index(neuroni, init, end, slope, intercept, False)
+        pgm = pgm_index(neuroni, init, slope, intercept, False)
         y = pgm.predict(dati).reshape(-1, 1)
-        print(y.shape)
         index = [0]
         for i in range(1, len(dati)):
             if dati[i] == dati[i - 1]:
