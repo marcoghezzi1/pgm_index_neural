@@ -7,31 +7,56 @@ from modello import pgm_index
 
 
 with open('../datipisa/segments_wiki_ts_1M_uint64.csv') as file:
-    indice = pd.read_csv(file, header=2)
-dati = np.fromfile("../datipisa/wiki_ts_1M_uint64", dtype=np.uint64)
+    indice_wiki = pd.read_csv(file, header=2)
+wiki = np.fromfile("../datipisa/wiki_ts_1M_uint64", dtype=np.uint64)
 
-dati = dati.reshape(len(dati), 1)
-init = indice['key'].to_numpy().reshape(1, len(indice))
-slope = indice['slope'].to_numpy().reshape(1, len(indice))
-intercept = indice['intercept'].to_numpy().reshape(1, len(indice))
-end = indice['key'][1:]
-end = np.append(end, sys.maxsize).reshape(1, len(indice))
-neuroni = len(indice)
+wiki = wiki.reshape(len(wiki), 1)
+init_wiki = indice_wiki['key'].to_numpy().reshape(1, len(indice_wiki))
+slope_wiki = indice_wiki['slope'].to_numpy().reshape(1, len(indice_wiki))
+intercept_wiki = indice_wiki['intercept'].to_numpy().reshape(1, len(indice_wiki))
+neuroni_wiki = len(indice_wiki)
+
+with open('../datipisa/segments_books_1M_uint64.csv') as file:
+    indice_books = pd.read_csv(file, header=2)
+books = np.fromfile("../datipisa/books_1M_uint64", dtype=np.uint64)
+books = books.reshape(len(books), 1)
+init_books = indice_books['key'].to_numpy().reshape(1, len(indice_books))
+slope_books = indice_books['slope'].to_numpy().reshape(1, len(indice_books))
+intercept_books = indice_books['intercept'].to_numpy().reshape(1, len(indice_books))
+neuroni_books = len(indice_books)
 
 
 class MyTestCase(unittest.TestCase):
-    def test_something(self):
-        pgm = pgm_index(neuroni, init, slope, intercept, False)
-        y = pgm.predict(dati).reshape(-1, 1)
+    def test_wiki(self):
+        pgm = pgm_index(neuroni_wiki, init_wiki, slope_wiki, intercept_wiki, False)
+        y = pgm.predict(wiki).reshape(-1, 1)
         index = [0]
-        for i in range(1, len(dati)):
-            if dati[i] == dati[i - 1]:
+        for i in range(1, len(wiki)):
+            if wiki[i] == wiki[i - 1]:
                 index.append(index[i - 1])
             else:
                 index.append(i)
         err = []
 
-        for i in range(len(dati)):
+        for i in range(len(wiki)):
+            diff = abs(y[i, 0] - index[i])
+            err.append(diff)
+        x = all(i <= 64.1 for i in err)
+        print(np.amax(err))
+        self.assertEqual(True, x)
+
+    def test_books(self):
+        pgm = pgm_index(neuroni_books, init_books, slope_books, intercept_books, False)
+        y = pgm.predict(books).reshape(-1, 1)
+        index = [0]
+        for i in range(1, len(books)):
+            if books[i] == books[i - 1]:
+                index.append(index[i - 1])
+            else:
+                index.append(i)
+        err = []
+
+        for i in range(len(books)):
             diff = abs(y[i, 0] - index[i])
             err.append(diff)
         x = all(i <= 64.1 for i in err)
