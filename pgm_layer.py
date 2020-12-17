@@ -24,23 +24,31 @@ class custom_pgm(Layer):
         self.trainable = train
         self.slope = slope
         self.intercept = intercept
+        self.initializer_slope = tf.keras.initializers.RandomUniform(minval=0., maxval=1e-4)
+        self.initializer_intercept = tf.keras.initializers.RandomUniform(minval=-2, maxval=2)
 
     def build(self, input_shape):
         self.init = self.add_weight(name='kernel',
                                     shape=(input_shape[1], self.units),
                                     initializer=my_init(self.initW), trainable=False, dtype=np.float64)
-        self.slope = self.add_weight(name='kernel',
-                                     shape=(input_shape[1], self.units),
-                                     initializer=my_init(self.slope), trainable=self.trainable, dtype=np.float64)
-        self.intercept = self.add_weight(name='kernel',
+        if not self.trainable:
+            self.slope = self.add_weight(name='kernel',
                                          shape=(input_shape[1], self.units),
-                                         initializer=my_init(self.intercept),
-                                         trainable=self.trainable, dtype=np.float64)
-        # super(custom_pgm, self).build(input_shape)  # Be sure to call this at the end
+                                         initializer=my_init(self.slope), trainable=self.trainable, dtype=np.float64)
+            self.intercept = self.add_weight(name='kernel', shape=(input_shape[1], self.units),
+                                             initializer=my_init(self.intercept),
+                                             trainable=self.trainable, dtype=np.float64)
+        else:
+            self.slope = self.add_weight(name='kernel',
+                                         shape=(input_shape[1], self.units),
+                                         initializer=self.initializer_slope, trainable=self.trainable, dtype=np.float64)
+            self.intercept = self.add_weight(name='kernel', shape=(input_shape[1], self.units),
+                                             initializer=self.initializer_intercept,
+                                             trainable=self.trainable, dtype=np.float64)
 
     def call(self, inputs):
         diff = inputs - self.init
-        prod = tf.cast(diff, np.float64)*self.slope
+        prod = tf.cast(diff, np.float64) * self.slope
         prod += self.intercept
         return prod
 

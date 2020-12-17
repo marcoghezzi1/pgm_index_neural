@@ -23,22 +23,21 @@ class myCustom(Layer):
         self.units = units
         self.initW = init
         self.trainable = train
-        self.prova = np.array([[sys.maxsize]], dtype=np.float64)
+        self.end = np.array([[sys.maxsize]], dtype=np.float64)
 
     def build(self, input_shape):
         self.init = self.add_weight(name='kernel',
                                     shape=(input_shape[1], self.units),
                                     initializer=my_init(self.initW), trainable=self.trainable, dtype=np.float64)
-        self.x = tf.concat((self.init, self.prova), axis=-1)
-
-        self.x = tf.roll(self.x, shift=[0, -1], axis=[0, 1])
-        self.x = self.x[:, :-1]
 
     def call(self, inputs):
+        end = tf.concat((self.init, self.end), axis=-1)
+        end = tf.roll(end, shift=[0, -1], axis=[0, 1])
+        end = end[:, :-1]
         a = K.greater_equal(inputs, self.init)
-        b = K.greater(self.x, inputs)
-        out = float(K.all(K.stack([a, b], axis=0), axis=0))
-        return out
+        b = K.greater(end, inputs)
+        c = K.cast(K.all(K.stack([a, b], axis=0), axis=0), np.float64)
+        return c
 
     def compute_output_shape(self, input_shape):
         return input_shape[0], self.units
