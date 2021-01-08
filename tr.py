@@ -1,10 +1,13 @@
-
+import os
+import sys
+#os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 from modello import pgm_index
 import pandas as pd
 import numpy as np
 import tensorflow as tf
-from keras.optimizers import Nadam
-from keras.optimizers import Adam
+from tensorflow.keras.optimizers import Nadam
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 import datetime
 
 dataset = 'datipisa/segments_wiki_ts_1M_uint64.csv'
@@ -40,15 +43,20 @@ err_medio_init = np.average(err)
 # training con slope inizializzate da 0 a 1e-3 e intercette da -2 a 2
 pgm = pgm_index(neuroni, init, slope, intercept, True)
 
-lr = 1e-5
+lr = float(sys.argv[1])
 opt = Nadam(learning_rate=lr)
 opt_name = 'Nadam'
 loss_name = 'mean_absolute_error'
 pgm.compile(loss=loss_name, optimizer=opt)
 y_train = np.array(index).reshape(len(x_train), 1)
-batch = 100
-epoche = 1000
-history = pgm.fit(x_train, y_train, batch_size=batch, epochs=epoche)
+batch = int(sys.argv[2])
+epoche = int(sys.argv[3])
+mc = ModelCheckpoint("Best_PGM_model"+str(lr)+str(batch), monitor='loss', mode='min',
+                     save_best_only=True, save_weights_only=True)
+es = EarlyStopping(monitor='loss')
+history = pgm.fit(x_train, y_train, batch_size=batch, epochs=epoche, verbose=1, callbacks=[mc])
+pgm.load_weights("Best_PGM_model"+str(lr)+str(batch))
+
 
 
 y = pgm.predict(x_train)
@@ -60,6 +68,7 @@ err_max = np.amax(err)
 err_medio = np.average(err)
 
 # update tabella risultati
+
 df = pd.read_csv(r'results_training.csv')
 df = df.append({'dataset': dataset, 'err medio iniziale': err_medio_init, 'loss': loss_name,
                 'optimizer': opt_name, 'lr': lr, 'batch size': batch,
