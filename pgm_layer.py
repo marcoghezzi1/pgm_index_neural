@@ -31,20 +31,8 @@ class custom_pgm(Layer):
         self.init = self.add_weight(name='kernel',
                                     shape=(input_shape[1], self.units),
                                     initializer=my_init(self.initW), trainable=False, dtype=np.float64)
-        if not self.trainable:
-            self.slope = self.add_weight(name='kernel',
-                                         shape=(input_shape[1], self.units),
-                                         initializer=my_init(self.slope), trainable=self.trainable, dtype=np.float64)
-            self.intercept = self.add_weight(name='kernel', shape=(input_shape[1], self.units),
-                                             initializer=my_init(self.intercept),
-                                             trainable=self.trainable, dtype=np.float64)
-        else:
-            self.slope = self.add_weight(name='kernel',
-                                         shape=(input_shape[1], self.units),
-                                         initializer=self.initializer_slope, trainable=self.trainable, dtype=np.float64)
-            self.intercept = self.add_weight(name='kernel', shape=(input_shape[1], self.units),
-                                             initializer=self.initializer_intercept,
-                                             trainable=self.trainable, dtype=np.float64)
+        self.slope = self.add_weight(name='kernel', shape=(input_shape[1], self.units), initializer=my_init(self.slope), trainable=self.trainable, dtype=np.float64)
+        self.intercept = self.add_weight(name='kernel', shape=(input_shape[1], self.units), initializer=my_init(self.intercept), trainable=self.trainable, dtype=np.float64)
 
     def call(self, inputs):
         diff = inputs - self.init

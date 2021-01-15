@@ -5,6 +5,7 @@ from modello import pgm_index
 import pandas as pd
 import numpy as np
 import tensorflow as tf
+from keras import backend as K
 from tensorflow.keras.optimizers import Nadam
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
@@ -40,15 +41,16 @@ for i in range(len(x_train)):
 err_max_init = np.amax(err)
 err_medio_init = np.average(err)
 
-# training con slope inizializzate da 0 a 1e-3 e intercette da -2 a 2
+# training con dati
 pgm = pgm_index(neuroni, init, slope, intercept, True)
 
+
 lr = float(sys.argv[1])
-opt = Nadam(learning_rate=lr)
-opt_name = 'Nadam'
+opt = Adam(learning_rate=lr)
+opt_name = 'Adam'
 loss_name = 'mean_absolute_error'
 pgm.compile(loss=loss_name, optimizer=opt)
-y_train = np.array(index).reshape(len(x_train), 1)
+y_train = np.array(index).reshape(len(x_train), 1).astype(np.float64)
 batch = int(sys.argv[2])
 epoche = int(sys.argv[3])
 mc = ModelCheckpoint("Best_PGM_model"+str(lr)+str(batch), monitor='loss', mode='min',
@@ -69,11 +71,11 @@ err_medio = np.average(err)
 
 # update tabella risultati
 
-df = pd.read_csv(r'results_training.csv')
+df = pd.read_csv(r'results.csv')
 df = df.append({'dataset': dataset, 'err medio iniziale': err_medio_init, 'loss': loss_name,
                 'optimizer': opt_name, 'lr': lr, 'batch size': batch,
                 'epochs': epoche, 'err medio finale': err_medio, 'errore massimo': err_max}, ignore_index=True)
-df.to_csv('results_training.csv', index=False)
+df.to_csv('results.csv', index=False)
 
 # grafico della loss
 import matplotlib.pyplot as plt

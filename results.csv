@@ -1,10 +1,12 @@
 dataset,err medio iniziale,loss,optimizer,lr,batch size,epochs,err medio finale,errore massimo
-datipisa/segments_wiki_ts_1M_uint64.csv,29.35749781,mean_absolute_error,adam,1e-05,500,1000,26.56,166.0
-datipisa/segments_wiki_ts_1M_uint64.csv,29.35749781,mean_absolute_error,nadam,0.0001,200,2000,26.56,526.3818322535127
-datipisa/segments_wiki_ts_1M_uint64.csv,29.3574978105292,mean_absolute_error,Nadam,9e-05,500,500,26.852461495900325,438.60237988576415
-datipisa/segments_wiki_ts_1M_uint64.csv,29.3574978105292,mean_absolute_error,Nadam,9e-05,350,250,27.50684217858745,305.53532101537036
-datipisa/segments_wiki_ts_1M_uint64.csv,29.3574978105292,mean_absolute_error,Nadam,9e-05,200,250,28.067173979162785,378.79835836406255
-datipisa/segments_wiki_ts_1M_uint64.csv,29.3574978105292,mean_absolute_error,Adam,0.0001,300,250,28.320606168793077,429.6574864888453
-datipisa/segments_wiki_ts_1M_uint64.csv,29.3574978105292,mean_absolute_error,Adam,0.001,400,250,45.12378559584147,2030.8471832649661
-datipisa/segments_wiki_ts_1M_uint64.csv,29.3574978105292,mean_absolute_error,Adam,0.001,500,200,44.772972068855246,2833.082640409717
-datipisa/segments_wiki_ts_1M_uint64.csv,29.357497810529196,mean_absolute_error,Adam,1e-05,100,2000,25.681251301112905,175.16459337237757
+datipisa/segments_wiki_ts_1M_uint64.csv,29.35,mean_absolute_error,adam,1e-05,500,1000,26.56,166.0
+datipisa/segments_wiki_ts_1M_uint64.csv,29.35,mean_absolute_error,nadam,0.0001,200,2000,26.56,526.38
+datipisa/segments_wiki_ts_1M_uint64.csv,29.35,mean_absolute_error,Nadam,9e-05,500,500,26.85,438.60
+datipisa/segments_wiki_ts_1M_uint64.csv,29.35,mean_absolute_error,Nadam,9e-05,350,250,27.50,305.53
+datipisa/segments_wiki_ts_1M_uint64.csv,29.35,mean_absolute_error,Nadam,9e-05,200,250,28.06,378.79
+datipisa/segments_wiki_ts_1M_uint64.csv,29.35,mean_absolute_error,Adam,0.0001,300,250,28.32,429.65
+datipisa/segments_wiki_ts_1M_uint64.csv,29.35,mean_absolute_error,Adam,0.001,400,250,45.12,2030.84
+datipisa/segments_wiki_ts_1M_uint64.csv,29.35,mean_absolute_error,Adam,0.001,500,200,44.77,2833.08
+datipisa/segments_wiki_ts_1M_uint64.csv,29.35,mean_absolute_error,Adam,1e-05,100,2000,25.68,175.16
+datipisa/segments_wiki_ts_1M_uint64.csv,29.35,mean_absolute_error,Nadam,1e-05,100,10000,24.23,260.80
+datipisa/segments_wiki_ts_1M_uint64.csv,29.35,mean_absolute_error,Adam,1e-05,100,10000,24.27,257.85
