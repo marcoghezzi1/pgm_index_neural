@@ -44,12 +44,15 @@ err_medio_init = np.average(err)
 # training con dati
 pgm = pgm_index(neuroni, init, slope, intercept, True)
 
+def my_loss(y_true, y_pred):
+    abs_difference = tf.abs(y_true - y_pred)
+    return tf.math.log(K.sum(tf.math.exp(abs_difference)))
 
 lr = float(sys.argv[1])
 opt = Adam(learning_rate=lr)
 opt_name = 'Adam'
-loss_name = 'mean_absolute_error'
-pgm.compile(loss=loss_name, optimizer=opt)
+loss_name = 'max loss'
+pgm.compile(loss=my_loss, optimizer=opt)
 y_train = np.array(index).reshape(len(x_train), 1).astype(np.float64)
 batch = int(sys.argv[2])
 epoche = int(sys.argv[3])
@@ -79,9 +82,9 @@ df.to_csv('results.csv', index=False)
 
 # grafico della loss
 import matplotlib.pyplot as plt
-plt.plot(history.history['loss'], label='MAE')
-plt.title('MAE')
-plt.ylabel('MAE value')
+plt.plot(history.history['loss'], label='MaxError')
+plt.title('MaxError')
+plt.ylabel('MaxError value')
 plt.xlabel('No. epoch')
 plt.legend(loc="upper left")
 log_img = 'logs/plot/' + datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + '.eps'
