@@ -7,7 +7,7 @@ from tensorflow.keras.layers import Multiply
 import numpy as np
 
 
-def pgm_index(neuroni, seg_init, slopes, intercepts, trainable):
+def pgm_index(neuroni, seg_init, slopes, intercepts, trainable, dati):
     # layer input
     data = Input(shape=(1,), dtype=np.float64)
 
@@ -16,7 +16,8 @@ def pgm_index(neuroni, seg_init, slopes, intercepts, trainable):
     left = custom(data)
 
     # layer right
-    pgm = custom_pgm(neuroni, seg_init, slopes, intercepts, trainable, dtype=np.float64, name="right")
+    pgm = custom_pgm(units=neuroni, init=seg_init, slope=slopes, intercept=intercepts, train=trainable,
+                     dati=dati, dtype=np.float64, name="right")
     right = pgm(data)
 
     # mult layer

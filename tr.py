@@ -11,6 +11,14 @@ from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 import datetime
 
+
+# CUSTOM LOSS
+def my_loss(y_true, y_pred):
+    abs_difference = tf.abs(y_true - y_pred)
+    return tf.math.log(K.sum(tf.math.exp(abs_difference)))
+
+dati = True
+
 dataset = 'datipisa/segments_wiki_ts_1M_uint64.csv'
 with open(dataset) as file:
     indice = pd.read_csv(file, header=2)
@@ -29,7 +37,7 @@ init = indice['key'].to_numpy().reshape(1, len(indice))
 slope = indice['slope'].to_numpy().reshape(1, len(indice))
 intercept = indice['intercept'].to_numpy().reshape(1, len(indice))
 neuroni = len(indice)
-pgm = pgm_index(neuroni, init, slope, intercept, False)
+pgm = pgm_index(neuroni, init, slope, intercept, True, dati)
 
 # calcolo media con valori presi dai dati
 y = pgm.predict(x_train)
@@ -41,21 +49,31 @@ for i in range(len(x_train)):
 err_max_init = np.amax(err)
 err_medio_init = np.average(err)
 
+init_custom = input("init pesi random? Y/N ")
+if init_custom == 'Y':
+    dati = False
+
 # training con dati
-pgm = pgm_index(neuroni, init, slope, intercept, True)
+pgm = pgm_index(neuroni, init, slope, intercept, True, dati)
+lr = input("learning rate: ")
+lr = float(lr)
 
-def my_loss(y_true, y_pred):
-    abs_difference = tf.abs(y_true - y_pred)
-    return tf.math.log(K.sum(tf.math.exp(abs_difference)))
+batch = input("batch: ")
+batch = int(batch)
 
-lr = float(sys.argv[1])
+epoche = input("epoche: ")
+epoche = int(epoche)
+
+
+loss = input("loss (mae/max): ")
+if loss == 'max':
+    loss = my_loss
+
 opt = Adam(learning_rate=lr)
 opt_name = 'Adam'
-loss_name = 'max loss'
-pgm.compile(loss=my_loss, optimizer=opt)
+loss_name = loss
+pgm.compile(loss=loss, optimizer=opt)
 y_train = np.array(index).reshape(len(x_train), 1).astype(np.float64)
-batch = int(sys.argv[2])
-epoche = int(sys.argv[3])
 mc = ModelCheckpoint("Best_PGM_model"+str(lr)+str(batch), monitor='loss', mode='min',
                      save_best_only=True, save_weights_only=True)
 es = EarlyStopping(monitor='loss')

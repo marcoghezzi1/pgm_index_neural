@@ -17,7 +17,7 @@ class my_init(Initializer):
 
 
 class custom_pgm(Layer):
-    def __init__(self, units, init, slope, intercept, train, **kwargs):
+    def __init__(self, units, init, slope, intercept, train, dati, **kwargs):
         super(custom_pgm, self).__init__(**kwargs)
         self.units = units
         self.initW = init
@@ -26,13 +26,24 @@ class custom_pgm(Layer):
         self.intercept = intercept
         self.initializer_slope = tf.keras.initializers.RandomUniform(minval=0., maxval=1e-4)
         self.initializer_intercept = tf.keras.initializers.RandomUniform(minval=-2, maxval=2)
+        self.use_data = dati
 
     def build(self, input_shape):
         self.init = self.add_weight(name='kernel',
                                     shape=(input_shape[1], self.units),
                                     initializer=my_init(self.initW), trainable=False, dtype=np.float64)
-        self.slope = self.add_weight(name='kernel', shape=(input_shape[1], self.units), initializer=my_init(self.slope), trainable=self.trainable, dtype=np.float64)
-        self.intercept = self.add_weight(name='kernel', shape=(input_shape[1], self.units), initializer=my_init(self.intercept), trainable=self.trainable, dtype=np.float64)
+        if self.use_data:
+            self.slope = self.add_weight(name='kernel', shape=(input_shape[1], self.units),
+                                         initializer=my_init(self.slope), trainable=self.trainable, dtype=np.float64)
+            self.intercept = self.add_weight(name='kernel', shape=(input_shape[1], self.units),
+                                             initializer=my_init(self.intercept), trainable=self.trainable,
+                                             dtype=np.float64)
+        else:
+            self.slope = self.add_weight(name='kernel', shape=(input_shape[1], self.units),
+                                         initializer=self.initializer_slope, trainable=self.trainable, dtype=np.float64)
+            self.intercept = self.add_weight(name='kernel', shape=(input_shape[1], self.units),
+                                             initializer=self.initializer_intercept, trainable=self.trainable,
+                                             dtype=np.float64)
 
     def call(self, inputs):
         diff = inputs - self.init
